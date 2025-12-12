@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice #55</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+        
+        .download-btn-container {
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+            text-align: right;
+        }
+        
+        .download-btn {
+            background: #FF5722;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(255, 87, 34, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: #E64A19;
+            box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 3px solid #FF5722;
+        }
+        
+        .logo-section {
+            flex: 1;
+        }
+        
+        .logo-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .company-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .company-details {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .invoice-title-section {
+            text-align: right;
+        }
+        
+        .invoice-title {
+            font-size: 42px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .invoice-meta {
+            background: #FF5722;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
+        .invoice-meta-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .invoice-meta-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .invoice-meta-label {
+            font-weight: 600;
+            margin-right: 20px;
+        }
+        
+        .billing-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        
+        .billing-box {
+            flex: 1;
+            margin-right: 30px;
+        }
+        
+        .billing-box:last-child {
+            margin-right: 0;
+        }
+        
+        .billing-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #FF5722;
+            margin-bottom: 10px;
+        }
+        
+        .billing-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .billing-details {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        .items-table thead {
+            background: #f8f8f8;
+        }
+        
+        .items-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            border-bottom: 2px solid #FF5722;
+        }
+        
+        .items-table th:last-child,
+        .items-table td:last-child {
+            text-align: right;
+        }
+        
+        .items-table td {
+            padding: 20px 15px;
+            color: #666;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .items-table tbody tr:hover {
+            background: #fafafa;
+        }
+        
+        .totals-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+        }
+        
+        .totals-box {
+            width: 350px;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            font-size: 15px;
+        }
+        
+        .total-row.subtotal {
+            color: #666;
+        }
+        
+        .total-row.tax {
+            color: #666;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .total-row.grand-total {
+            background: #FF5722;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .payment-section {
+            background: #f8f8f8;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+        
+        .payment-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        .payment-label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .payment-value {
+            color: #333;
+        }
+        
+        .terms-section {
+            margin-bottom: 30px;
+            page-break-inside: avoid;
+        }
+        
+        .terms-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .terms-text {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .invoice-container {
+                box-shadow: none;
+                padding: 30px;
+            }
+            
+            .download-btn-container {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="download-btn-container">
+        <button class="download-btn" onclick="downloadPDF()">📥 Download PDF</button>
+    </div>
+    
+    <div class="invoice-container" id="invoice">
+        <div class="header">
+            <div class="logo-section">
+                <img src="https://lahoucineciamgharyde.online/LOGOME.png" alt="Logo" class="logo-img" crossorigin="anonymous">
+                <div class="company-name">LAHOUCINECI AMGHARYDE</div>
+                <div class="company-details">
+                    Rue de alger, imm. Essadiki<br>
+                    Taza, 35000<br>
+                    Morocco<br>
+                    +212 609841932<br>
+                    zavios@proton.me
+                </div>
+            </div>
+            <div class="invoice-title-section">
+                <div class="invoice-title">INVOICE</div>
+                <div class="invoice-meta">
+                    <div class="invoice-meta-item">
+                        <span class="invoice-meta-label">Invoice#:</span>
+                        <span>55</span>
+                    </div>
+                    <div class="invoice-meta-item">
+                        <span class="invoice-meta-label">Date:</span>
+                        <span>28 Nov 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="billing-section">
+            <div class="billing-box">
+                <div class="billing-title">Invoice To:</div>
+                <div class="billing-name">Chaima El Hamidi</div>
+                <div class="billing-details">
+                    12 Av. Farhat Hachad<br>
+                    Agadir, 80000<br>
+                    Morocco
+                </div>
+            </div>
+        </div>
+        
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>SL.</th>
+                    <th>Item Description</th>
+                    <th>Price</th>
+                    <th>Qty.</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Long from Video edit</td>
+                    <td>$500.00</td>
+                    <td>1</td>
+                    <td>$500.00</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Thumbnail design</td>
+                    <td>$100.00</td>
+                    <td>1</td>
+                    <td>$100.00</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="totals-section">
+            <div class="totals-box">
+                <div class="total-row subtotal">
+                    <span>Sub Total:</span>
+                    <span>$600.00</span>
+                </div>
+                <div class="total-row tax">
+                    <span>Tax:</span>
+                    <span>0.00%</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span>Total:</span>
+                    <span>$600.00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="payment-section">
+            <div class="payment-title">Payment Information:</div>
+            <div class="payment-grid">
+                <div class="payment-label">Bank Name:</div>
+                <div class="payment-value">Citibank</div>
+                
+                <div class="payment-label">Bank Address:</div>
+                <div class="payment-value">111 Wall Street, New York, NY 10043 USA</div>
+                
+                <div class="payment-label">Routing (ABA):</div>
+                <div class="payment-value">031100209</div>
+                
+                <div class="payment-label">SWIFT Code:</div>
+                <div class="payment-value">CITIUS33</div>
+                
+                <div class="payment-label">Account Number:</div>
+                <div class="payment-value">70582160002059988</div>
+                
+                <div class="payment-label">Account Type:</div>
+                <div class="payment-value">CHECKING</div>
+                
+                <div class="payment-label">Beneficiary Name:</div>
+                <div class="payment-value">LAHOUCINECI AMGHARYDE</div>
+            </div>
+        </div>
+        
+        <div class="terms-section">
+            <div class="terms-title">Terms & Conditions</div>
+            <div class="terms-text">
+                Work will start when payment is settled.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            const element = document.getElementById('invoice');
+            const opt = {
+                margin: 0.5,
+                filename: 'Invoice-55-LAHOUCINECI-AMGHARYDE.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'letter', 
+                    orientation: 'portrait' 
+                }
+            };
+            
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
