@@ -74,6 +74,7 @@
             object-fit: contain;
             margin-bottom: 15px;
             display: block;
+            background: white;
         }
         
         .company-name {
@@ -420,25 +421,51 @@
     </div>
 
     <script>
+        // Preload logo to ensure it's available for PDF
+        window.addEventListener('load', function() {
+            const logo = document.querySelector('.logo-img');
+            if (logo && !logo.complete) {
+                console.log('Logo still loading...');
+            }
+        });
+
         function downloadPDF() {
             const element = document.getElementById('invoice');
-            const opt = {
-                margin: 0.5,
-                filename: 'Invoice-55-LAHOUCINECI-AMGHARYDE.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    logging: false
-                },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'letter', 
-                    orientation: 'portrait' 
-                }
+            
+            // Wait for logo to load before generating PDF
+            const logo = document.querySelector('.logo-img');
+            
+            const generatePDF = () => {
+                const opt = {
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: 'Invoice-55-LAHOUCINECI-AMGHARYDE.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        logging: true,
+                        letterRendering: true,
+                        imageTimeout: 15000
+                    },
+                    jsPDF: { 
+                        unit: 'in', 
+                        format: 'letter', 
+                        orientation: 'portrait' 
+                    }
+                };
+                
+                html2pdf().set(opt).from(element).save();
             };
             
-            html2pdf().set(opt).from(element).save();
+            // Check if logo is loaded
+            if (logo && !logo.complete) {
+                logo.onload = generatePDF;
+                // Fallback if logo fails to load
+                setTimeout(generatePDF, 3000);
+            } else {
+                generatePDF();
+            }
         }
     </script>
 </body>
