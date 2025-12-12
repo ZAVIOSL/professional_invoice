@@ -110,9 +110,11 @@
         }
         
         .invoice-meta-item {
-            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
             font-size: 14px;
-            text-align: left;
+            min-width: 180px;
         }
         
         .invoice-meta-item:last-child {
@@ -121,7 +123,12 @@
         
         .invoice-meta-label {
             font-weight: 600;
-            margin-right: 10px;
+            margin-right: 20px;
+            display: inline-block;
+        }
+        
+        .invoice-meta-value {
+            display: inline-block;
         }
         
         .billing-section {
@@ -318,11 +325,11 @@
                 <div class="invoice-meta">
                     <div class="invoice-meta-item">
                         <span class="invoice-meta-label">Invoice#:</span>
-                        <span>55</span>
+                        <span class="invoice-meta-value">55</span>
                     </div>
                     <div class="invoice-meta-item">
                         <span class="invoice-meta-label">Date:</span>
-                        <span>28 Nov 2025</span>
+                        <span class="invoice-meta-value">28 Nov 2025</span>
                     </div>
                 </div>
             </div>
@@ -440,17 +447,20 @@
                     filename: 'Invoice-55-LAHOUCINECI-AMGHARYDE.pdf',
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { 
-                        scale: 2,
+                        scale: 3,
                         useCORS: true,
                         allowTaint: true,
-                        logging: true,
+                        logging: false,
                         letterRendering: true,
-                        imageTimeout: 15000
+                        imageTimeout: 15000,
+                        scrollY: 0,
+                        scrollX: 0
                     },
                     jsPDF: { 
                         unit: 'in', 
                         format: 'letter', 
-                        orientation: 'portrait' 
+                        orientation: 'portrait',
+                        compress: true
                     }
                 };
                 
