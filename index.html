@@ -71,13 +71,14 @@
         .logo-img {
             width: 100px;
             height: 100px;
-            object-fit: cover;
+            object-fit: contain;
             margin-bottom: 15px;
             display: block;
             background: white;
             border-radius: 50%;
             border: 3px solid #FF5722;
-            padding: 5px;
+            padding: 8px;
+            box-sizing: border-box;
         }
         
         .company-name {
@@ -110,13 +111,15 @@
             padding: 15px 25px;
             border-radius: 8px;
             display: inline-block;
-            min-width: 200px;
+            min-width: 220px;
         }
         
         .invoice-meta-item {
             margin-bottom: 8px;
             font-size: 14px;
             line-height: 1.8;
+            display: block;
+            overflow: hidden;
         }
         
         .invoice-meta-item:last-child {
@@ -125,13 +128,14 @@
         
         .invoice-meta-label {
             font-weight: 600;
-            margin-right: 10px;
-            display: inline;
+            display: inline-block;
+            float: left;
         }
         
         .invoice-meta-value {
-            display: inline;
+            display: inline-block;
             float: right;
+            font-weight: 400;
         }
         
         .billing-section {
